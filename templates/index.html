@@ -259,7 +259,9 @@
     <script>
         function openDemo() {
             document.getElementById('demoModal').classList.add('open');
-            document.getElementById('demoVideo').play();
+            const v = document.getElementById('demoVideo');
+            v.load();
+            v.play().catch(() => {});
         }
         function closeDemo() {
             document.getElementById('demoModal').classList.remove('open');

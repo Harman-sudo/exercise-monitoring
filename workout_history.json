@@ -1,0 +1,19 @@
+{
+  "squat": [
+    {
+      "exercise_id": "squat",
+      "correct": 0,
+      "incorrect": 0,
+      "date": "2026-04-09 19:26"
+    },
+    {
+      "exercise_id": "squat",
+      "correct": 0,
+      "incorrect": 0,
+      "date": "2026-04-09 19:26"
+    }
+  ],
+  "bicep_curl": [],
+  "plank": [],
+  "side_leg_raise": []
+}

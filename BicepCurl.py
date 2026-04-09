@@ -1,5 +1,7 @@
 
 import cv2
+import json
+import os
 import mediapipe as mp
 import numpy as np
 
@@ -111,3 +113,11 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             break
     cap.release()
     cv2.destroyAllWindows()
+
+_session = {
+    "exercise_id": "bicep_curl",
+    "correct": counter,
+}
+_session_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "session_stats.json")
+with open(_session_file, 'w') as _f:
+    json.dump(_session, _f)

@@ -2,6 +2,7 @@ import time
 import cv2
 import numpy as np
 import os
+import json
 import mediapipe as mp
 
 def draw_rounded_rect(img, rect_start, rect_end, corner_width, box_color):
@@ -766,3 +767,12 @@ while True:
 cap.release()
 out.release()
 cv2.destroyAllWindows()
+
+_session = {
+    "exercise_id": "squat",
+    "correct": live_process_frame.state_tracker['SQUAT_COUNT'],
+    "incorrect": live_process_frame.state_tracker['IMPROPER_SQUAT'],
+}
+_session_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "session_stats.json")
+with open(_session_file, 'w') as _f:
+    json.dump(_session, _f)

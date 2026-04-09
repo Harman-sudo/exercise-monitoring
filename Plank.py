@@ -1,4 +1,6 @@
 import cv2
+import json
+import os
 import mediapipe as mp
 import numpy as np
 import time
@@ -31,6 +33,7 @@ cap = cv2.VideoCapture(0)
 start_time = None
 timer_running = False
 elapsed_time = 0
+max_hold_time = 0
 # Create a named window and set it to always be on top
 cv2.namedWindow("Plank Counter", cv2.WINDOW_NORMAL)
 cv2.setWindowProperty("Plank Counter", cv2.WND_PROP_TOPMOST, 1)
@@ -95,6 +98,7 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
                     start_time = time.time()
                     timer_running = True
                 elapsed_time = int(time.time() - start_time)
+                max_hold_time = max(max_hold_time, elapsed_time)
                 correction_message = "Good posture!"
             else:
                 # Reset timer if posture is incorrect
@@ -148,3 +152,11 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
             break
     cap.release()
     cv2.destroyAllWindows()
+
+_session = {
+    "exercise_id": "plank",
+    "max_hold": max_hold_time,
+}
+_session_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "session_stats.json")
+with open(_session_file, 'w') as _f:
+    json.dump(_session, _f)

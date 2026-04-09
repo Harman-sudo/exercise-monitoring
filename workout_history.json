@@ -13,7 +13,21 @@
       "date": "2026-04-09 19:26"
     }
   ],
-  "bicep_curl": [],
+  "bicep_curl": [
+    {
+      "exercise_id": "bicep_curl",
+      "correct": 0,
+      "date": "2026-04-09 20:41"
+    }
+  ],
   "plank": [],
-  "side_leg_raise": []
+  "side_leg_raise": [
+    {
+      "exercise_id": "side_leg_raise",
+      "left_reps": 0,
+      "right_reps": 0,
+      "correct": 0,
+      "date": "2026-04-09 20:41"
+    }
+  ]
 }

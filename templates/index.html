@@ -115,6 +115,56 @@
         }
         .steps li span { color: rgba(255,255,255,0.75); font-size: 0.94rem; padding-top: 5px; line-height: 1.5; }
         .steps li span strong { color: #a5d6a7; }
+
+        /* Demo button */
+        .demo-btn {
+            background: transparent;
+            border: 2px solid #69f0ae;
+            color: #69f0ae;
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .demo-btn:hover {
+            background: #69f0ae;
+            color: #111;
+        }
+
+        /* Modal */
+        .demo-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.78);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .demo-modal.open { display: flex; }
+        .demo-modal-content {
+            background: #1a1d26;
+            border: 1px solid rgba(105,240,174,0.3);
+            border-radius: 16px;
+            padding: 28px 24px 20px;
+            width: 90%;
+            max-width: 700px;
+            position: relative;
+        }
+        .demo-close {
+            position: absolute;
+            top: 10px; right: 14px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.6rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .demo-close:hover { color: #fff; }
     </style>
 </head>
 <body>
@@ -138,6 +188,18 @@
         <h2>Train Smarter with <span>Real-Time AI</span></h2>
         <p>Pose detection runs entirely in your browser using your camera.<br>
            Works on phone, tablet, and desktop — no app required.</p>
+        <button class="demo-btn" onclick="openDemo()">▶ Watch Demo — Side Leg Raise</button>
+    </div>
+
+    <!-- Demo Video Modal -->
+    <div id="demoModal" class="demo-modal" onclick="closeDemo()">
+        <div class="demo-modal-content" onclick="event.stopPropagation()">
+            <button class="demo-close" onclick="closeDemo()">&times;</button>
+            <h3 style="color:#69f0ae;margin:0 0 14px;font-size:1.1rem;letter-spacing:1px;">SIDE LEG RAISE — DEMO</h3>
+            <video id="demoVideo" controls width="100%" style="border-radius:10px;background:#000;">
+                <source src="/demo/legraise" type="video/mp4">
+            </video>
+        </div>
     </div>
 
     <div class="exercise-grid">
@@ -193,5 +255,18 @@
         <p>FitForm AI &mdash; Pose detection powered by MediaPipe &nbsp;|&nbsp;
         <a href="mailto:info@fitformai.com">info@fitformai.com</a></p>
     </footer>
+
+    <script>
+        function openDemo() {
+            document.getElementById('demoModal').classList.add('open');
+            document.getElementById('demoVideo').play();
+        }
+        function closeDemo() {
+            document.getElementById('demoModal').classList.remove('open');
+            const v = document.getElementById('demoVideo');
+            v.pause();
+            v.currentTime = 0;
+        }
+    </script>
 </body>
 </html>

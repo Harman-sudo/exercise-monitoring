@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+import os
+from flask import Flask, render_template, send_from_directory
 
 app = Flask(__name__)
 
@@ -26,6 +27,12 @@ def squats():
 @app.route('/bicep_curl')
 def bicep_curl():
     return render_template('bicep_curl.html')
+
+
+@app.route('/demo/legraise')
+def demo_legraise():
+    video_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test video')
+    return send_from_directory(video_dir, 'LEGRAISE.mp4')
 
 
 if __name__ == '__main__':

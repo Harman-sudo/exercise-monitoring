@@ -31,7 +31,7 @@ def bicep_curl():
 
 @app.route('/testvideo/LEGRAISE.mp4')
 def demo_legraise():
-    video_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test video')
+    video_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testvideo')
     return send_from_directory(video_dir, 'LEGRAISE.mp4')
 
 

@@ -1,0 +1,120 @@
+/* ─── Base ─────────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0; padding: 0;
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* ─── Header ──────────────────────────────────────────────────────────── */
+header {
+    background: rgba(255,255,255,0.97);
+    padding: 18px 30px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    position: sticky; top: 0; z-index: 100;
+}
+
+header h1 {
+    margin: 0;
+    color: #2e7d32;
+    font-size: 1.9rem;
+    letter-spacing: 1px;
+}
+
+/* ─── Nav ─────────────────────────────────────────────────────────────── */
+nav {
+    background: rgba(255,255,255,0.95);
+    padding: 8px 20px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+}
+
+nav ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; justify-content: center;
+    flex-wrap: wrap; gap: 4px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #2e7d32;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: background 0.18s, color 0.18s;
+    display: block;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    background: #4CAF50;
+    color: white;
+}
+
+/* logout link distinct style */
+nav ul li:last-child a {
+    color: #c62828;
+    border: 1px solid #c62828;
+}
+nav ul li:last-child a:hover {
+    background: #c62828;
+    color: white;
+}
+
+/* ─── Main content areas ─────────────────────────────────────────────── */
+main {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(255,255,255,0.45);
+    border-radius: 14px;
+    max-width: 860px;
+    margin: 40px auto;
+    backdrop-filter: blur(4px);
+}
+
+.exercise-container {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    max-width: 760px;
+    margin: 40px auto;
+    backdrop-filter: blur(4px);
+}
+
+h2 { color: #2e7d32; font-size: 1.6rem; margin-top: 0; }
+h2, p { font-weight: 600; color: #222; }
+
+/* ─── Instruction list on exercise pages ─────────────────────────────── */
+.exercise-container ul {
+    text-align: left;
+    display: inline-block;
+    margin: 0 auto 16px;
+    padding-left: 20px;
+    color: #333;
+    font-size: 0.93rem;
+    font-weight: normal;
+}
+.exercise-container ul li { margin-bottom: 4px; }
+
+/* ─── Footer ─────────────────────────────────────────────────────────── */
+footer {
+    text-align: center;
+    padding: 14px;
+    background: rgba(255,255,255,0.88);
+    color: #4bb14e;
+    font-size: 0.88rem;
+    margin-top: 20px;
+}
+
+footer a { color: #4bb14e; text-decoration: none; }
+footer a:hover { text-decoration: underline; }

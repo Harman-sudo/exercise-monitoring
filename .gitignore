@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Flask
+instance/
+*.sqlite3
+
+# Video output
+*.avi
+*.mp4
+
+# PowerPoint temp/lock files
+~$*
+*.pptx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files
+test video/

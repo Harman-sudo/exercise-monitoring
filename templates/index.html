@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitForm AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .hero {
+            text-align: center;
+            padding: 50px 20px 30px;
+            background: linear-gradient(135deg, rgba(76,175,80,0.15), rgba(255,255,255,0.5));
+            border-radius: 16px;
+            max-width: 900px;
+            margin: 40px auto 20px;
+        }
+        .hero h2 { font-size: 2rem; color: #2e7d32; margin-bottom: 8px; }
+        .hero p { font-size: 1.1rem; color: #444; margin-bottom: 30px; }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+        .exercise-card {
+            background: rgba(255,255,255,0.92);
+            border-radius: 14px;
+            padding: 28px 18px 22px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            transition: transform 0.18s, box-shadow 0.18s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .exercise-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(76,175,80,0.25);
+        }
+        .exercise-card .icon {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        .exercise-card h3 { color: #2e7d32; margin: 0 0 6px; font-size: 1.1rem; }
+        .exercise-card p { color: #555; font-size: 0.88rem; margin: 0; font-weight: normal; }
+
+        .how-it-works {
+            max-width: 700px;
+            margin: 0 auto 50px;
+            background: rgba(255,255,255,0.88);
+            border-radius: 14px;
+            padding: 28px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .how-it-works h3 { color: #2e7d32; margin-top: 0; }
+        .steps { list-style: none; padding: 0; margin: 0; }
+        .steps li {
+            display: flex; align-items: flex-start; gap: 14px;
+            padding: 10px 0; border-bottom: 1px solid #eee;
+        }
+        .steps li:last-child { border-bottom: none; }
+        .step-num {
+            background: #4CAF50; color: white;
+            width: 28px; height: 28px; min-width: 28px;
+            border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-weight: bold; font-size: 14px;
+        }
+        .steps li span { color: #333; font-size: 0.95rem; padding-top: 3px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>FitForm AI</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/plank">Plank</a></li>
+            <li><a href="/side_leg_raise">Side Leg Raise</a></li>
+            <li><a href="/bicep_curl">Bicep Curl</a></li>
+            <li><a href="/squat">Squats</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero">
+        <h2>Welcome to FitForm AI</h2>
+        <p>Real-time AI-powered exercise form analysis — directly in your browser.<br>
+        No app download. No server upload. Your camera stays private on your device.</p>
+    </div>
+
+    <div class="exercise-grid">
+        <a href="/bicep_curl" class="exercise-card">
+            <div class="icon">💪</div>
+            <h3>Bicep Curl</h3>
+            <p>Count reps and get form feedback on elbow angle and posture.</p>
+        </a>
+        <a href="/squat" class="exercise-card">
+            <div class="icon">🏋️</div>
+            <h3>Squat</h3>
+            <p>Track correct vs incorrect squats with real-time knee and hip feedback.</p>
+        </a>
+        <a href="/plank" class="exercise-card">
+            <div class="icon">🧘</div>
+            <h3>Plank</h3>
+            <p>Hold timer starts automatically when your posture is correct.</p>
+        </a>
+        <a href="/side_leg_raise" class="exercise-card">
+            <div class="icon">🦵</div>
+            <h3>Side Leg Raise</h3>
+            <p>Tracks left and right legs independently for balanced training.</p>
+        </a>
+    </div>
+
+    <div class="how-it-works">
+        <h3>How it works</h3>
+        <ul class="steps">
+            <li>
+                <div class="step-num">1</div>
+                <span>Choose an exercise from the cards above or the navigation bar.</span>
+            </li>
+            <li>
+                <div class="step-num">2</div>
+                <span>Click <strong>Start Camera</strong> — allow camera access when prompted by your browser.</span>
+            </li>
+            <li>
+                <div class="step-num">3</div>
+                <span>Position yourself as described on each page. The AI detects your pose in real time.</span>
+            </li>
+            <li>
+                <div class="step-num">4</div>
+                <span>Reps, stages, and form feedback appear live on screen. Click <strong>Stop</strong> when done.</span>
+            </li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>Contact us: <a href="mailto:info@fitformai.com">info@fitformai.com</a></p>
+    </footer>
+</body>
+</html>

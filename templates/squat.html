@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitForm AI - Squat</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .page-wrapper { max-width: 960px; margin: 30px auto; padding: 0 16px 50px; }
+        .top-section { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; }
+        .info-card { flex: 1; min-width: 240px; background: rgba(255,255,255,0.93); border-radius: 14px; padding: 22px; box-shadow: 0 3px 12px rgba(0,0,0,0.10); }
+        .info-card h2 { color: #2e7d32; margin-top: 0; font-size: 1.4rem; }
+        .info-card ul { padding-left: 18px; color: #444; font-size: 0.9rem; line-height: 1.7; margin: 0; }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+        .stat-box { background: linear-gradient(135deg, #4CAF50, #2e7d32); color: white; border-radius: 10px; padding: 14px 10px; text-align: center; }
+        .stat-box.red { background: linear-gradient(135deg, #e53935, #b71c1c); }
+        .stat-box.blue { background: linear-gradient(135deg, #1e88e5, #0d47a1); }
+        .stat-box .stat-value { font-size: 2rem; font-weight: 700; line-height: 1; }
+        .stat-box .stat-label { font-size: 0.75rem; opacity: 0.85; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .state-bar { background: rgba(255,255,255,0.8); border-radius: 8px; padding: 10px 14px; margin: 10px 0; display: flex; gap: 8px; align-items: center; }
+        .state-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccc; transition: background 0.3s; flex-shrink: 0; }
+        .state-dot.active { background: #4CAF50; box-shadow: 0 0 6px #4CAF50; }
+        .state-text { font-size: 0.88rem; color: #555; }
+
+        .feedback-box { background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.93rem; color: #333; font-weight: 600; min-height: 44px; transition: background 0.3s, border-color 0.3s; }
+        .feedback-box.good { background: #e8f5e9; border-color: #4CAF50; }
+        .feedback-box.warn { background: #fff3e0; border-color: #ff9800; }
+        .feedback-box.error { background: #ffeaea; border-color: #e53935; }
+
+        #statusMsg { color: #666; font-size: 0.87rem; margin-top: 8px; font-style: italic; }
+        .btn-start { width: 100%; padding: 13px; border: none; border-radius: 10px; background: #4CAF50; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.18s; margin-top: 8px; }
+        .btn-start:hover { background: #2e7d32; }
+        .btn-stop { width: 100%; padding: 13px; border: none; border-radius: 10px; background: #e74c3c; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.18s; margin-top: 8px; display: none; }
+        .btn-stop:hover { background: #c0392b; }
+
+        .camera-section { flex: 2; min-width: 300px; }
+        .camera-wrapper { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,0.25); background: #111; }
+        #videoElement { display: block; width: 100%; transform: scaleX(-1); }
+        #outputCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); pointer-events: none; }
+        .cam-overlay-feedback { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.75)); color: #fff; padding: 30px 16px 12px; font-size: 1rem; font-weight: 700; text-align: center; }
+        .placeholder-msg { color: #888; text-align: center; padding: 80px 20px; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <header><h1>FitForm AI</h1></header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/plank">Plank</a></li>
+            <li><a href="/side_leg_raise">Side Leg Raise</a></li>
+            <li><a href="/bicep_curl">Bicep Curl</a></li>
+            <li><a href="/squat" class="active">Squats</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="top-section">
+            <div class="info-card">
+                <h2>🏋️ Squat</h2>
+                <ul>
+                    <li>Stand <strong>sideways</strong> to the camera</li>
+                    <li>Feet <strong>shoulder-width</strong> apart</li>
+                    <li>Squat until thighs are <strong>parallel</strong> to floor</li>
+                    <li>Keep knees behind your toes</li>
+                </ul>
+
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="correctCount">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-box red">
+                        <div class="stat-value" id="incorrectCount">0</div>
+                        <div class="stat-label">Incorrect</div>
+                    </div>
+                </div>
+
+                <!-- State progress bar -->
+                <div class="state-bar">
+                    <div class="state-dot" id="dot-s1"></div>
+                    <div class="state-text">Standing</div>
+                    <div style="flex:1; height:2px; background:#ddd; margin:0 4px;"></div>
+                    <div class="state-dot" id="dot-s2"></div>
+                    <div class="state-text">Going down</div>
+                    <div style="flex:1; height:2px; background:#ddd; margin:0 4px;"></div>
+                    <div class="state-dot" id="dot-s3"></div>
+                    <div class="state-text">Deep squat</div>
+                </div>
+
+                <div class="feedback-box" id="feedbackBox">Start the camera and position yourself.</div>
+                <p id="statusMsg">Click "Start Camera" to begin.</p>
+                <button class="btn-start" id="startBtn" onclick="startExercise()">▶ Start Camera</button>
+                <button class="btn-stop"  id="stopBtn"  onclick="stopExercise()">⏹ Stop</button>
+            </div>
+
+            <div class="camera-section">
+                <div class="camera-wrapper" id="cameraWrapper">
+                    <div class="placeholder-msg" id="placeholderMsg">📷 Camera feed will appear here.<br>Click "Start Camera" to begin.</div>
+                    <video id="videoElement" width="640" height="480" autoplay playsinline muted style="display:none;"></video>
+                    <canvas id="outputCanvas" width="640" height="480" style="display:none;"></canvas>
+                    <div class="cam-overlay-feedback" id="overlayFeedback" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>Contact us: <a href="mailto:info@fitformai.com">info@fitformai.com</a></p></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+    <script>
+        let mpCamera = null, poseModel = null;
+        let correctCount = 0, incorrectCount = 0;
+        const THRESHOLDS = {
+            HIP_KNEE_VERT: { NORMAL: [0, 32], TRANS: [35, 65], PASS: [80, 95] },
+            HIP_THRESH: [15, 50], ANKLE_THRESH: 30, KNEE_THRESH: [50, 80, 95], OFFSET_THRESH: 35
+        };
+        let stateSeq = [], currState = null, incorrectPosture = false;
+
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('outputCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function findAngle(p1, p2, refPt) {
+            const p1r = [p1[0]-refPt[0], p1[1]-refPt[1]];
+            const p2r = [p2[0]-refPt[0], p2[1]-refPt[1]];
+            const dot = p1r[0]*p2r[0]+p1r[1]*p2r[1];
+            const n1 = Math.sqrt(p1r[0]**2+p1r[1]**2), n2 = Math.sqrt(p2r[0]**2+p2r[1]**2);
+            if (!n1||!n2) return 0;
+            return Math.round(Math.acos(Math.max(-1,Math.min(1,dot/(n1*n2))))*180/Math.PI);
+        }
+
+        function getState(ka) {
+            const {NORMAL,TRANS,PASS} = THRESHOLDS.HIP_KNEE_VERT;
+            if (ka>=NORMAL[0]&&ka<=NORMAL[1]) return 's1';
+            if (ka>=TRANS[0]&&ka<=TRANS[1])  return 's2';
+            if (ka>=PASS[0]&&ka<=PASS[1])    return 's3';
+            return null;
+        }
+
+        function updateStateSeq(s) {
+            if (s==='s2') {
+                if ((!stateSeq.includes('s3')&&stateSeq.filter(x=>x==='s2').length===0)||
+                    (stateSeq.includes('s3')&&stateSeq.filter(x=>x==='s2').length===1)) stateSeq.push(s);
+            } else if (s==='s3') {
+                if (!stateSeq.includes('s3')&&stateSeq.includes('s2')) stateSeq.push(s);
+            }
+        }
+
+        function highlightState(s) {
+            ['s1','s2','s3'].forEach(id => {
+                const el = document.getElementById('dot-'+id);
+                if (el) el.className = 'state-dot' + (s===id?' active':'');
+            });
+        }
+
+        function setFeedback(text, type) {
+            const box = document.getElementById('feedbackBox');
+            box.textContent = text; box.className = 'feedback-box '+(type||'warn');
+            document.getElementById('overlayFeedback').textContent = text;
+        }
+
+        function onResults(results) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!results.poseLandmarks) {
+                setFeedback('No person detected — step into frame.','error');
+                highlightState(null); return;
+            }
+            drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS, {color:'#00E676',lineWidth:3});
+            drawLandmarks(ctx, results.poseLandmarks, {color:'#FF1744',lineWidth:1,radius:5});
+
+            const lm = results.poseLandmarks;
+            const W = canvas.width, H = canvas.height;
+            const px = l => [l.x*W, l.y*H];
+            const nose=px(lm[0]),lShldr=px(lm[11]),rShldr=px(lm[12]);
+            const lHip=px(lm[23]),rHip=px(lm[24]),lKnee=px(lm[25]),rKnee=px(lm[26]);
+            const lAnkle=px(lm[27]),rAnkle=px(lm[28]),lFoot=px(lm[31]),rFoot=px(lm[32]);
+
+            const offsetAngle = findAngle(lShldr, rShldr, nose);
+            if (offsetAngle > THRESHOLDS.OFFSET_THRESH) {
+                setFeedback('Stand sideways to the camera — camera not aligned.','warn');
+                return;
+            }
+            const distL = Math.abs(lFoot[1]-lShldr[1]), distR = Math.abs(rFoot[1]-rShldr[1]);
+            const hip=distL>distR?lHip:rHip, knee=distL>distR?lKnee:rKnee;
+            const ankle=distL>distR?lAnkle:rAnkle, shldr=distL>distR?lShldr:rShldr;
+
+            const kneeVert  = findAngle(hip,[knee[0],0],knee);
+            const hipVert   = findAngle(shldr,[hip[0],0],hip);
+            const ankleVert = findAngle(knee,[ankle[0],0],ankle);
+
+            currState = getState(kneeVert);
+            updateStateSeq(currState);
+            highlightState(currState);
+
+            let feedback='Good squat form!', fbType='good';
+
+            if (currState==='s1') {
+                if (stateSeq.length===3&&!incorrectPosture) {
+                    correctCount++;
+                    document.getElementById('correctCount').textContent=correctCount;
+                } else if (stateSeq.includes('s2')&&stateSeq.length===1) {
+                    incorrectCount++;
+                    document.getElementById('incorrectCount').textContent=incorrectCount;
+                    feedback='Incomplete — squat deeper next time!'; fbType='warn';
+                } else if (incorrectPosture) {
+                    incorrectCount++;
+                    document.getElementById('incorrectCount').textContent=incorrectCount;
+                    feedback='Incorrect form detected.'; fbType='error';
+                }
+                stateSeq=[]; incorrectPosture=false;
+            } else {
+                if (hipVert>THRESHOLDS.HIP_THRESH[1]) { feedback='Lean back slightly.'; fbType='warn'; }
+                else if (hipVert<THRESHOLDS.HIP_THRESH[0]&&stateSeq.filter(s=>s==='s2').length===1) { feedback='Lean forward slightly.'; fbType='warn'; }
+                if (THRESHOLDS.KNEE_THRESH[0]<kneeVert&&kneeVert<THRESHOLDS.KNEE_THRESH[1]&&stateSeq.filter(s=>s==='s2').length===1) { feedback='Lower your hips more.'; fbType='warn'; }
+                else if (kneeVert>THRESHOLDS.KNEE_THRESH[2]) { feedback='Squat too deep!'; fbType='error'; incorrectPosture=true; }
+                if (ankleVert>THRESHOLDS.ANKLE_THRESH) { feedback='Knee falling over toe — push knees out.'; fbType='error'; incorrectPosture=true; }
+            }
+            setFeedback(feedback, fbType);
+        }
+
+        function startExercise() {
+            document.getElementById('statusMsg').textContent='Loading pose model…';
+            document.getElementById('placeholderMsg').style.display='none';
+            video.style.display='block'; canvas.style.display='block';
+            document.getElementById('overlayFeedback').style.display='block';
+            document.getElementById('startBtn').style.display='none';
+            document.getElementById('stopBtn').style.display='block';
+
+            poseModel = new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`});
+            poseModel.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
+            poseModel.onResults(onResults);
+
+            mpCamera = new Camera(video, {onFrame:async()=>{await poseModel.send({image:video});},width:640,height:480});
+            mpCamera.start()
+                .then(()=>{document.getElementById('statusMsg').textContent='Camera active — AI is detecting your pose.';})
+                .catch(err=>{document.getElementById('statusMsg').textContent='Camera error: '+err.message;});
+        }
+
+        function stopExercise() {
+            if (mpCamera){mpCamera.stop();mpCamera=null;} if (poseModel){poseModel.close();poseModel=null;}
+            video.style.display='none'; canvas.style.display='none';
+            document.getElementById('overlayFeedback').style.display='none';
+            document.getElementById('placeholderMsg').style.display='block';
+            document.getElementById('startBtn').style.display='block';
+            document.getElementById('stopBtn').style.display='none';
+            document.getElementById('statusMsg').textContent='Stopped. Click "Start Camera" to begin again.';
+            correctCount=0; incorrectCount=0; stateSeq=[]; currState=null; incorrectPosture=false;
+            document.getElementById('correctCount').textContent='0';
+            document.getElementById('incorrectCount').textContent='0';
+            highlightState(null);
+            setFeedback('Start the camera and position yourself.','');
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+        }
+    </script>
+</body>
+</html>

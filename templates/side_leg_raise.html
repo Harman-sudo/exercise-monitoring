@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitForm AI - Side Leg Raise</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .page-wrapper { max-width: 960px; margin: 30px auto; padding: 0 16px 50px; }
+        .top-section { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; }
+        .info-card { flex: 1; min-width: 240px; background: rgba(255,255,255,0.93); border-radius: 14px; padding: 22px; box-shadow: 0 3px 12px rgba(0,0,0,0.10); }
+        .info-card h2 { color: #2e7d32; margin-top: 0; font-size: 1.4rem; }
+        .info-card ul { padding-left: 18px; color: #444; font-size: 0.9rem; line-height: 1.7; margin: 0 0 14px; }
+
+        /* Two-leg stat cards */
+        .leg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+        .leg-card { border-radius: 12px; padding: 14px 10px; text-align: center; color: white; }
+        .leg-card.left  { background: linear-gradient(135deg, #4CAF50, #2e7d32); }
+        .leg-card.right { background: linear-gradient(135deg, #1e88e5, #0d47a1); }
+        .leg-card .leg-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.85; margin-bottom: 6px; }
+        .leg-card .rep-val { font-size: 2.4rem; font-weight: 700; line-height: 1; }
+        .leg-card .stage-val { font-size: 0.8rem; margin-top: 4px; opacity: 0.9; }
+
+        /* Angle chips */
+        .angle-row { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
+        .angle-chip { flex: 1; background: rgba(255,255,255,0.85); border-radius: 8px; padding: 8px 10px; text-align: center; font-size: 0.78rem; color: #555; border: 1px solid #ddd; min-width: 70px; }
+        .angle-chip .av { font-size: 1.1rem; font-weight: 700; color: #2e7d32; }
+
+        .feedback-box { background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.93rem; color: #333; font-weight: 600; min-height: 44px; transition: background 0.3s, border-color 0.3s; }
+        .feedback-box.good  { background: #e8f5e9; border-color: #4CAF50; }
+        .feedback-box.warn  { background: #fff3e0; border-color: #ff9800; }
+        .feedback-box.error { background: #ffeaea; border-color: #e53935; }
+
+        #statusMsg { color: #666; font-size: 0.87rem; margin-top: 8px; font-style: italic; }
+        .btn-start { width: 100%; padding: 13px; border: none; border-radius: 10px; background: #4CAF50; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.18s; margin-top: 8px; }
+        .btn-start:hover { background: #2e7d32; }
+        .btn-stop  { width: 100%; padding: 13px; border: none; border-radius: 10px; background: #e74c3c; color: white; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.18s; margin-top: 8px; display: none; }
+        .btn-stop:hover  { background: #c0392b; }
+
+        /* Camera */
+        .camera-section { flex: 2; min-width: 300px; }
+        .camera-wrapper { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 24px rgba(0,0,0,0.25); background: #111; }
+        #videoElement { display: block; width: 100%; transform: scaleX(-1); }
+        #outputCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); pointer-events: none; }
+        .cam-overlay-feedback { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.75)); color: #fff; padding: 30px 16px 12px; font-size: 1rem; font-weight: 700; text-align: center; }
+
+        /* Overlay rep badges on camera */
+        .cam-badge-left  { position: absolute; top: 10px; left: 10px;  background: rgba(76,175,80,0.9);  color:#fff; padding:8px 14px; border-radius:8px; font-weight:700; font-size:0.9rem; z-index:10; }
+        .cam-badge-right { position: absolute; top: 10px; right: 10px; background: rgba(30,136,229,0.9); color:#fff; padding:8px 14px; border-radius:8px; font-weight:700; font-size:0.9rem; z-index:10; }
+
+        .placeholder-msg { color: #888; text-align: center; padding: 80px 20px; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <header><h1>FitForm AI</h1></header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/plank">Plank</a></li>
+            <li><a href="/side_leg_raise" class="active">Side Leg Raise</a></li>
+            <li><a href="/bicep_curl">Bicep Curl</a></li>
+            <li><a href="/squat">Squats</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="top-section">
+
+            <!-- Left: info + controls -->
+            <div class="info-card">
+                <h2>🦵 Side Leg Raise</h2>
+                <ul>
+                    <li>Stand <strong>facing</strong> the camera</li>
+                    <li>Raise each leg <strong>out to the side</strong></li>
+                    <li>Keep the raised leg <strong>straight</strong></li>
+                    <li>Both legs tracked <strong>independently</strong></li>
+                </ul>
+
+                <div class="leg-grid">
+                    <div class="leg-card left">
+                        <div class="leg-title">Left Leg</div>
+                        <div class="rep-val" id="leftCount">0</div>
+                        <div class="stage-val">Stage: <span id="leftStage">down</span></div>
+                    </div>
+                    <div class="leg-card right">
+                        <div class="leg-title">Right Leg</div>
+                        <div class="rep-val" id="rightCount">0</div>
+                        <div class="stage-val">Stage: <span id="rightStage">down</span></div>
+                    </div>
+                </div>
+
+                <div class="angle-row">
+                    <div class="angle-chip">
+                        <div class="av" id="lRaiseAngle">-</div>L Raise°
+                    </div>
+                    <div class="angle-chip">
+                        <div class="av" id="lKneeAngle">-</div>L Knee°
+                    </div>
+                    <div class="angle-chip">
+                        <div class="av" id="rRaiseAngle">-</div>R Raise°
+                    </div>
+                    <div class="angle-chip">
+                        <div class="av" id="rKneeAngle">-</div>R Knee°
+                    </div>
+                </div>
+
+                <div class="feedback-box" id="feedbackBox">Start the camera and position yourself.</div>
+                <p id="statusMsg">Click "Start Camera" to begin.</p>
+                <button class="btn-start" id="startBtn" onclick="startExercise()">▶ Start Camera</button>
+                <button class="btn-stop"  id="stopBtn"  onclick="stopExercise()">⏹ Stop</button>
+            </div>
+
+            <!-- Right: camera feed -->
+            <div class="camera-section">
+                <div class="camera-wrapper" id="cameraWrapper">
+                    <div class="placeholder-msg" id="placeholderMsg">📷 Camera feed will appear here.<br>Click "Start Camera" to begin.</div>
+                    <video id="videoElement" width="640" height="480" autoplay playsinline muted style="display:none;"></video>
+                    <canvas id="outputCanvas" width="640" height="480" style="display:none;"></canvas>
+                    <div class="cam-badge-left"  id="camBadgeLeft"  style="display:none;">L: 0 reps</div>
+                    <div class="cam-badge-right" id="camBadgeRight" style="display:none;">R: 0 reps</div>
+                    <div class="cam-overlay-feedback" id="overlayFeedback" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>Contact us: <a href="mailto:info@fitformai.com">info@fitformai.com</a></p></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+    <script>
+        let mpCamera = null, poseModel = null;
+        let leftCounter = 0, rightCounter = 0;
+        let leftStage = 'down', rightStage = 'down';
+
+        const video  = document.getElementById('videoElement');
+        const canvas = document.getElementById('outputCanvas');
+        const ctx    = canvas.getContext('2d');
+
+        function calcAngle(a, b, c) {
+            const rad = Math.atan2(c.y-b.y, c.x-b.x) - Math.atan2(a.y-b.y, a.x-b.x);
+            let ang = Math.abs(rad * 180 / Math.PI);
+            return ang > 180 ? 360 - ang : ang;
+        }
+
+        function setFeedback(text, type) {
+            const box = document.getElementById('feedbackBox');
+            box.textContent = text;
+            box.className   = 'feedback-box ' + (type || 'warn');
+            document.getElementById('overlayFeedback').textContent = text;
+        }
+
+        // Ported from SideLegRaise.py process_leg()
+        function processLeg(hip, knee, ankle, shoulder, stage, counter) {
+            const legRaise = calcAngle(shoulder, hip, knee);
+            const kneeStr  = calcAngle(hip, knee, ankle);
+
+            let newStage = stage, newCounter = counter, feedback = 'Good form!', fbType = 'good';
+
+            if (legRaise >= 90 && legRaise <= 140 && kneeStr > 170 && stage === 'down') {
+                newStage = 'up'; newCounter = counter + 1;
+            } else if (legRaise > 170 && stage === 'up' && kneeStr > 170) {
+                newStage = 'down';
+            }
+
+            if      (legRaise > 140)  { feedback = 'Raise leg higher to the side.';  fbType = 'warn'; }
+            else if (legRaise < 90)   { feedback = "Don't raise leg too high!";        fbType = 'warn'; }
+            else if (kneeStr  < 170)  { feedback = 'Keep your leg straight.';          fbType = 'warn'; }
+
+            return { counter: newCounter, stage: newStage, feedback, fbType, legRaise: Math.round(legRaise), kneeStr: Math.round(kneeStr) };
+        }
+
+        function onResults(results) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!results.poseLandmarks) {
+                setFeedback('No person detected — step into frame.', 'error');
+                return;
+            }
+
+            drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS, { color: '#00E676', lineWidth: 3 });
+            drawLandmarks(ctx,  results.poseLandmarks, { color: '#FF1744', lineWidth: 1, radius: 5 });
+
+            const lm = results.poseLandmarks;
+
+            // Left leg: shoulder=11, hip=23, knee=25, ankle=27
+            const lRes = processLeg(lm[23], lm[25], lm[27], lm[11], leftStage,  leftCounter);
+            // Right leg: shoulder=12, hip=24, knee=26, ankle=28
+            const rRes = processLeg(lm[24], lm[26], lm[28], lm[12], rightStage, rightCounter);
+
+            leftCounter  = lRes.counter; leftStage  = lRes.stage;
+            rightCounter = rRes.counter; rightStage = rRes.stage;
+
+            // Update UI
+            document.getElementById('leftCount').textContent  = leftCounter;
+            document.getElementById('leftStage').textContent  = leftStage;
+            document.getElementById('rightCount').textContent = rightCounter;
+            document.getElementById('rightStage').textContent = rightStage;
+
+            document.getElementById('lRaiseAngle').textContent = lRes.legRaise;
+            document.getElementById('lKneeAngle').textContent  = lRes.kneeStr;
+            document.getElementById('rRaiseAngle').textContent = rRes.legRaise;
+            document.getElementById('rKneeAngle').textContent  = rRes.kneeStr;
+
+            document.getElementById('camBadgeLeft').textContent  = 'L: ' + leftCounter  + ' reps';
+            document.getElementById('camBadgeRight').textContent = 'R: ' + rightCounter + ' reps';
+
+            // Show the most relevant feedback (prefer warnings over good)
+            const feedback = lRes.fbType !== 'good' ? lRes.feedback
+                           : rRes.fbType !== 'good' ? rRes.feedback
+                           : 'Good form! Keep going.';
+            const fbType   = lRes.fbType !== 'good' ? lRes.fbType
+                           : rRes.fbType !== 'good' ? rRes.fbType
+                           : 'good';
+            setFeedback(feedback, fbType);
+        }
+
+        function startExercise() {
+            document.getElementById('statusMsg').textContent = 'Loading pose model… (first load may take a moment)';
+            document.getElementById('placeholderMsg').style.display = 'none';
+            video.style.display   = 'block';
+            canvas.style.display  = 'block';
+            document.getElementById('overlayFeedback').style.display  = 'block';
+            document.getElementById('camBadgeLeft').style.display     = 'block';
+            document.getElementById('camBadgeRight').style.display    = 'block';
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display  = 'block';
+
+            poseModel = new Pose({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}` });
+            poseModel.setOptions({ modelComplexity: 1, smoothLandmarks: true, enableSegmentation: false, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+            poseModel.onResults(onResults);
+
+            mpCamera = new Camera(video, {
+                onFrame: async () => { await poseModel.send({ image: video }); },
+                width: 640, height: 480
+            });
+            mpCamera.start()
+                .then(() => { document.getElementById('statusMsg').textContent = 'Camera active — AI is detecting your pose.'; })
+                .catch(err => { document.getElementById('statusMsg').textContent = 'Camera error: ' + err.message; });
+        }
+
+        function stopExercise() {
+            if (mpCamera)   { mpCamera.stop();   mpCamera   = null; }
+            if (poseModel)  { poseModel.close();  poseModel  = null; }
+
+            video.style.display  = 'none';
+            canvas.style.display = 'none';
+            document.getElementById('overlayFeedback').style.display  = 'none';
+            document.getElementById('camBadgeLeft').style.display     = 'none';
+            document.getElementById('camBadgeRight').style.display    = 'none';
+            document.getElementById('placeholderMsg').style.display   = 'block';
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display  = 'none';
+            document.getElementById('statusMsg').textContent  = 'Stopped. Click "Start Camera" to begin again.';
+
+            leftCounter = 0; rightCounter = 0; leftStage = 'down'; rightStage = 'down';
+            document.getElementById('leftCount').textContent   = '0';
+            document.getElementById('rightCount').textContent  = '0';
+            document.getElementById('leftStage').textContent   = 'down';
+            document.getElementById('rightStage').textContent  = 'down';
+            ['lRaiseAngle','lKneeAngle','rRaiseAngle','rKneeAngle'].forEach(id => {
+                document.getElementById(id).textContent = '-';
+            });
+            setFeedback('Start the camera and position yourself.', '');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>

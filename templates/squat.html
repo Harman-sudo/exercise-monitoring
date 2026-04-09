@@ -44,7 +44,10 @@
     </style>
 </head>
 <body>
-    <header><h1>FitForm AI</h1></header>
+    <header>
+        <h1>FitForm AI</h1>
+        <span class="tagline">AI-Powered Exercise Monitoring</span>
+    </header>
     <nav>
         <ul>
             <li><a href="/">Home</a></li>
@@ -52,7 +55,6 @@
             <li><a href="/side_leg_raise">Side Leg Raise</a></li>
             <li><a href="/bicep_curl">Bicep Curl</a></li>
             <li><a href="/squat" class="active">Squats</a></li>
-            <li><a href="/logout">Logout</a></li>
         </ul>
     </nav>
 
@@ -233,10 +235,10 @@
             document.getElementById('stopBtn').style.display='block';
 
             poseModel = new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`});
-            poseModel.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
+            poseModel.setOptions({modelComplexity:0,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
             poseModel.onResults(onResults);
 
-            mpCamera = new Camera(video, {onFrame:async()=>{await poseModel.send({image:video});},width:640,height:480});
+            mpCamera = new Camera(video, {onFrame:async()=>{await poseModel.send({image:video});},width:480,height:360,facingMode:'user'});
             mpCamera.start()
                 .then(()=>{document.getElementById('statusMsg').textContent='Camera active — AI is detecting your pose.';})
                 .catch(err=>{document.getElementById('statusMsg').textContent='Camera error: '+err.message;});

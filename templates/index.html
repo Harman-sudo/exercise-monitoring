@@ -3,144 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitForm AI</title>
+    <title>FitForm AI — Exercise Monitoring</title>
     <link rel="stylesheet" href="/static/style.css">
     <style>
         .hero {
             text-align: center;
-            padding: 50px 20px 30px;
-            background: linear-gradient(135deg, rgba(76,175,80,0.15), rgba(255,255,255,0.5));
-            border-radius: 16px;
-            max-width: 900px;
-            margin: 40px auto 20px;
+            padding: 56px 24px 36px;
+            max-width: 760px;
+            margin: 36px auto 10px;
         }
-        .hero h2 { font-size: 2rem; color: #2e7d32; margin-bottom: 8px; }
-        .hero p { font-size: 1.1rem; color: #444; margin-bottom: 30px; }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(76,175,80,0.18);
+            border: 1px solid rgba(76,175,80,0.45);
+            color: #a5d6a7;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 5px 16px;
+            border-radius: 20px;
+            margin-bottom: 18px;
+        }
+        .hero h2 {
+            font-size: 2.4rem;
+            color: #fff;
+            margin-bottom: 14px;
+            line-height: 1.2;
+            text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+        }
+        .hero h2 span { color: #69f0ae; }
+        .hero p {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.68);
+            margin-bottom: 36px;
+            line-height: 1.7;
+            font-weight: normal;
+        }
 
+        /* Exercise grid */
         .exercise-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
             gap: 20px;
-            max-width: 900px;
-            margin: 0 auto 40px;
-            padding: 0 20px;
+            max-width: 940px;
+            margin: 0 auto 50px;
+            padding: 0 16px;
         }
         .exercise-card {
-            background: rgba(255,255,255,0.92);
-            border-radius: 14px;
-            padding: 28px 18px 22px;
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 30px 18px 24px;
             text-align: center;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-            transition: transform 0.18s, box-shadow 0.18s;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             text-decoration: none;
             color: inherit;
             display: block;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
         }
         .exercise-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 30px rgba(76,175,80,0.25);
+            transform: translateY(-7px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.45);
+            border-color: rgba(105,240,174,0.4);
         }
-        .exercise-card .icon {
-            font-size: 2.8rem;
+        .exercise-card .icon { font-size: 3rem; margin-bottom: 12px; display: block; }
+        .exercise-card h3 { color: #fff; margin: 0 0 8px; font-size: 1.1rem; }
+        .exercise-card p { color: rgba(255,255,255,0.55); font-size: 0.86rem; margin: 0; font-weight: normal; line-height: 1.5; }
+        .exercise-card .card-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #43a047, #1b5e20);
+            color: #fff;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* How it works */
+        .how-section {
+            max-width: 700px;
+            margin: 0 auto 60px;
+            padding: 0 16px;
+        }
+        .how-section h3 {
+            color: #fff;
+            text-align: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+        .steps { list-style: none; }
+        .steps li {
+            display: flex; align-items: flex-start; gap: 16px;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 14px;
             margin-bottom: 10px;
         }
-        .exercise-card h3 { color: #2e7d32; margin: 0 0 6px; font-size: 1.1rem; }
-        .exercise-card p { color: #555; font-size: 0.88rem; margin: 0; font-weight: normal; }
-
-        .how-it-works {
-            max-width: 700px;
-            margin: 0 auto 50px;
-            background: rgba(255,255,255,0.88);
-            border-radius: 14px;
-            padding: 28px 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-        .how-it-works h3 { color: #2e7d32; margin-top: 0; }
-        .steps { list-style: none; padding: 0; margin: 0; }
-        .steps li {
-            display: flex; align-items: flex-start; gap: 14px;
-            padding: 10px 0; border-bottom: 1px solid #eee;
-        }
-        .steps li:last-child { border-bottom: none; }
         .step-num {
-            background: #4CAF50; color: white;
-            width: 28px; height: 28px; min-width: 28px;
-            border-radius: 50%; display: flex;
-            align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #43a047, #1b5e20);
+            color: white;
+            width: 30px; height: 30px; min-width: 30px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
             font-weight: bold; font-size: 14px;
+            box-shadow: 0 2px 8px rgba(27,94,32,0.4);
         }
-        .steps li span { color: #333; font-size: 0.95rem; padding-top: 3px; }
+        .steps li span { color: rgba(255,255,255,0.75); font-size: 0.94rem; padding-top: 5px; line-height: 1.5; }
+        .steps li span strong { color: #a5d6a7; }
     </style>
 </head>
 <body>
     <header>
         <h1>FitForm AI</h1>
+        <span class="tagline">AI-Powered Exercise Monitoring</span>
     </header>
 
     <nav>
         <ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="/" class="active">Home</a></li>
             <li><a href="/plank">Plank</a></li>
             <li><a href="/side_leg_raise">Side Leg Raise</a></li>
             <li><a href="/bicep_curl">Bicep Curl</a></li>
             <li><a href="/squat">Squats</a></li>
-            <li><a href="/logout">Logout</a></li>
         </ul>
     </nav>
 
     <div class="hero">
-        <h2>Welcome to FitForm AI</h2>
-        <p>Real-time AI-powered exercise form analysis — directly in your browser.<br>
-        No app download. No server upload. Your camera stays private on your device.</p>
+        <div class="hero-badge">Browser · Mobile · No Install</div>
+        <h2>Train Smarter with <span>Real-Time AI</span></h2>
+        <p>Pose detection runs entirely in your browser using your camera.<br>
+           Works on phone, tablet, and desktop — no app required.</p>
     </div>
 
     <div class="exercise-grid">
         <a href="/bicep_curl" class="exercise-card">
-            <div class="icon">💪</div>
+            <span class="icon">💪</span>
             <h3>Bicep Curl</h3>
-            <p>Count reps and get form feedback on elbow angle and posture.</p>
+            <p>Count reps with elbow angle tracking and posture correction.</p>
+            <span class="card-btn">Start</span>
         </a>
         <a href="/squat" class="exercise-card">
-            <div class="icon">🏋️</div>
+            <span class="icon">🏋️</span>
             <h3>Squat</h3>
-            <p>Track correct vs incorrect squats with real-time knee and hip feedback.</p>
+            <p>Track correct vs incorrect squats with knee and hip feedback.</p>
+            <span class="card-btn">Start</span>
         </a>
         <a href="/plank" class="exercise-card">
-            <div class="icon">🧘</div>
-            <h3>Plank</h3>
+            <span class="icon">🧘</span>
+            <h3>Plank Hold</h3>
             <p>Hold timer starts automatically when your posture is correct.</p>
+            <span class="card-btn">Start</span>
         </a>
         <a href="/side_leg_raise" class="exercise-card">
-            <div class="icon">🦵</div>
+            <span class="icon">🦵</span>
             <h3>Side Leg Raise</h3>
-            <p>Tracks left and right legs independently for balanced training.</p>
+            <p>Left and right legs tracked independently for balanced training.</p>
+            <span class="card-btn">Start</span>
         </a>
     </div>
 
-    <div class="how-it-works">
+    <div class="how-section">
         <h3>How it works</h3>
         <ul class="steps">
             <li>
                 <div class="step-num">1</div>
-                <span>Choose an exercise from the cards above or the navigation bar.</span>
+                <span>Choose an exercise above and tap <strong>Start Camera</strong>.</span>
             </li>
             <li>
                 <div class="step-num">2</div>
-                <span>Click <strong>Start Camera</strong> — allow camera access when prompted by your browser.</span>
+                <span>Allow camera access when your browser asks — it stays on your device only.</span>
             </li>
             <li>
                 <div class="step-num">3</div>
-                <span>Position yourself as described on each page. The AI detects your pose in real time.</span>
+                <span>Position yourself as instructed. The AI detects your pose in <strong>real time</strong>.</span>
             </li>
             <li>
                 <div class="step-num">4</div>
-                <span>Reps, stages, and form feedback appear live on screen. Click <strong>Stop</strong> when done.</span>
+                <span>Reps, timer, and <strong>form feedback</strong> appear live. Tap Stop when done.</span>
             </li>
         </ul>
     </div>
 
     <footer>
-        <p>Contact us: <a href="mailto:info@fitformai.com">info@fitformai.com</a></p>
+        <p>FitForm AI &mdash; Pose detection powered by MediaPipe &nbsp;|&nbsp;
+        <a href="mailto:info@fitformai.com">info@fitformai.com</a></p>
     </footer>
 </body>
 </html>

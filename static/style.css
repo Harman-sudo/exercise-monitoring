@@ -1,12 +1,9 @@
-/* ─── Base ─────────────────────────────────────────────────────────────── */
-* { box-sizing: border-box; }
+/* ─── Base ────────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    margin: 0; padding: 0;
-    background-image: url('background.jpg');
-    background-size: cover;
-    background-position: center;
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
     background-attachment: fixed;
     color: #333;
     min-height: 100vh;
@@ -14,107 +11,275 @@ body {
 
 /* ─── Header ──────────────────────────────────────────────────────────── */
 header {
-    background: rgba(255,255,255,0.97);
-    padding: 18px 30px;
+    background: linear-gradient(90deg, #1b5e20 0%, #2e7d32 50%, #388e3c 100%);
+    padding: 0 20px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 3px 16px rgba(0,0,0,0.35);
+    position: sticky; top: 0; z-index: 200;
 }
 
 header h1 {
     margin: 0;
-    color: #2e7d32;
-    font-size: 1.9rem;
-    letter-spacing: 1px;
+    color: #fff;
+    font-size: 1.75rem;
+    letter-spacing: 2px;
+    padding: 16px 0 4px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+header .tagline {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.78rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding-bottom: 12px;
+    display: block;
 }
 
 /* ─── Nav ─────────────────────────────────────────────────────────────── */
 nav {
-    background: rgba(255,255,255,0.95);
-    padding: 8px 20px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 nav ul {
-    list-style: none; margin: 0; padding: 0;
+    list-style: none;
     display: flex; justify-content: center;
     flex-wrap: wrap; gap: 4px;
 }
 
 nav ul li a {
     text-decoration: none;
-    color: #2e7d32;
+    color: rgba(255,255,255,0.82);
     font-weight: 600;
-    font-size: 0.92rem;
-    padding: 6px 14px;
+    font-size: 0.88rem;
+    padding: 7px 16px;
     border-radius: 20px;
-    transition: background 0.18s, color 0.18s;
+    transition: background 0.2s, color 0.2s;
     display: block;
 }
 
 nav ul li a:hover,
 nav ul li a.active {
     background: #4CAF50;
-    color: white;
+    color: #fff;
 }
-
-/* logout link distinct style */
-nav ul li:last-child a {
-    color: #c62828;
-    border: 1px solid #c62828;
-}
-nav ul li:last-child a:hover {
-    background: #c62828;
-    color: white;
-}
-
-/* ─── Main content areas ─────────────────────────────────────────────── */
-main {
-    text-align: center;
-    padding: 40px 20px;
-    background: rgba(255,255,255,0.45);
-    border-radius: 14px;
-    max-width: 860px;
-    margin: 40px auto;
-    backdrop-filter: blur(4px);
-}
-
-.exercise-container {
-    text-align: center;
-    padding: 30px 20px;
-    background: rgba(255,255,255,0.5);
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
-    max-width: 760px;
-    margin: 40px auto;
-    backdrop-filter: blur(4px);
-}
-
-h2 { color: #2e7d32; font-size: 1.6rem; margin-top: 0; }
-h2, p { font-weight: 600; color: #222; }
-
-/* ─── Instruction list on exercise pages ─────────────────────────────── */
-.exercise-container ul {
-    text-align: left;
-    display: inline-block;
-    margin: 0 auto 16px;
-    padding-left: 20px;
-    color: #333;
-    font-size: 0.93rem;
-    font-weight: normal;
-}
-.exercise-container ul li { margin-bottom: 4px; }
 
 /* ─── Footer ─────────────────────────────────────────────────────────── */
 footer {
     text-align: center;
-    padding: 14px;
-    background: rgba(255,255,255,0.88);
-    color: #4bb14e;
-    font-size: 0.88rem;
-    margin-top: 20px;
+    padding: 16px;
+    background: rgba(0,0,0,0.45);
+    color: rgba(255,255,255,0.5);
+    font-size: 0.83rem;
+    margin-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.07);
 }
 
-footer a { color: #4bb14e; text-decoration: none; }
+footer a { color: #81c784; text-decoration: none; }
 footer a:hover { text-decoration: underline; }
+
+/* ─── Page wrapper (exercise pages) ─────────────────────────────────── */
+.page-wrapper {
+    max-width: 980px;
+    margin: 28px auto;
+    padding: 0 14px 60px;
+}
+
+.top-section {
+    display: flex; gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+/* ─── Info card (left panel on exercise pages) ───────────────────────── */
+.info-card {
+    flex: 1; min-width: 240px;
+    background: rgba(255,255,255,0.96);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+}
+
+.info-card h2 {
+    color: #1b5e20;
+    margin-top: 0;
+    font-size: 1.4rem;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e8f5e9;
+    margin-bottom: 12px;
+}
+
+.info-card ul {
+    padding-left: 18px;
+    color: #444;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* ─── Stat boxes ──────────────────────────────────────────────────────── */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+
+.stat-box {
+    background: linear-gradient(135deg, #43a047, #1b5e20);
+    color: white; border-radius: 12px; padding: 16px 10px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(27,94,32,0.3);
+}
+.stat-box.orange { background: linear-gradient(135deg, #fb8c00, #e65100); box-shadow: 0 4px 12px rgba(230,81,0,0.3); }
+.stat-box.red    { background: linear-gradient(135deg, #e53935, #b71c1c); box-shadow: 0 4px 12px rgba(183,28,28,0.3); }
+.stat-box.blue   { background: linear-gradient(135deg, #1e88e5, #0d47a1); box-shadow: 0 4px 12px rgba(13,71,161,0.3); }
+
+.stat-box .stat-value { font-size: 2.2rem; font-weight: 700; line-height: 1; }
+.stat-box .stat-label { font-size: 0.72rem; opacity: 0.85; margin-top: 5px; text-transform: uppercase; letter-spacing: 1.5px; }
+
+/* ─── Feedback box ────────────────────────────────────────────────────── */
+.feedback-box {
+    border-left: 4px solid #ff9800;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 0.92rem;
+    color: #333;
+    font-weight: 600;
+    min-height: 44px;
+    transition: background 0.3s, border-color 0.3s;
+    background: #fff8e1;
+}
+.feedback-box.good  { background: #e8f5e9; border-color: #43a047; }
+.feedback-box.warn  { background: #fff8e1; border-color: #ff9800; }
+.feedback-box.error { background: #ffebee; border-color: #e53935; }
+
+/* ─── Status message ─────────────────────────────────────────────────── */
+#statusMsg { color: #777; font-size: 0.85rem; margin-top: 8px; font-style: italic; }
+
+/* ─── Buttons ─────────────────────────────────────────────────────────── */
+.btn-start {
+    width: 100%; padding: 14px;
+    border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #43a047, #1b5e20);
+    color: white; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+    margin-top: 10px;
+    box-shadow: 0 4px 14px rgba(27,94,32,0.4);
+}
+.btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-start:active { transform: translateY(0); }
+
+.btn-stop {
+    width: 100%; padding: 14px;
+    border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #ef5350, #b71c1c);
+    color: white; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+    margin-top: 10px; display: none;
+    box-shadow: 0 4px 14px rgba(183,28,28,0.4);
+}
+.btn-stop:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ─── Camera section ─────────────────────────────────────────────────── */
+.camera-section { flex: 2; min-width: 300px; }
+
+.camera-wrapper {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    background: #0a0a0a;
+    border: 2px solid rgba(255,255,255,0.08);
+}
+
+#videoElement  { display: block; width: 100%; transform: scaleX(-1); }
+#outputCanvas  {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    transform: scaleX(-1); pointer-events: none;
+}
+
+.cam-overlay-feedback {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    color: #fff; padding: 34px 16px 14px;
+    font-size: 1rem; font-weight: 700; text-align: center;
+}
+
+.placeholder-msg {
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 90px 20px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* ─── Angle chips ─────────────────────────────────────────────────────── */
+.angle-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.angle-chip {
+    flex: 1;
+    background: #f1f8e9;
+    border-radius: 10px; padding: 9px 10px;
+    text-align: center; font-size: 0.78rem;
+    color: #555; border: 1px solid #c8e6c9;
+    min-width: 60px;
+}
+.angle-chip .av { font-size: 1.15rem; font-weight: 700; color: #2e7d32; }
+
+/* ─── State dots (squat) ──────────────────────────────────────────────── */
+.state-bar {
+    background: #f9fbe7; border-radius: 10px;
+    padding: 10px 14px; margin: 12px 0;
+    display: flex; gap: 8px; align-items: center;
+    border: 1px solid #dcedc8;
+}
+.state-dot { width: 12px; height: 12px; border-radius: 50%; background: #ccc; transition: background 0.3s; flex-shrink: 0; }
+.state-dot.active { background: #43a047; box-shadow: 0 0 8px #43a047; }
+.state-text { font-size: 0.82rem; color: #555; }
+
+/* ─── Timer display (plank) ───────────────────────────────────────────── */
+.timer-display {
+    background: linear-gradient(135deg, #fb8c00, #e65100);
+    color: white; border-radius: 14px; padding: 22px;
+    text-align: center; margin: 16px 0;
+    box-shadow: 0 4px 16px rgba(230,81,0,0.35);
+}
+.timer-display .timer-val { font-size: 3.8rem; font-weight: 700; line-height: 1; }
+.timer-display .timer-lbl { font-size: 0.78rem; opacity: 0.85; text-transform: uppercase; letter-spacing: 2px; margin-top: 6px; }
+
+/* ─── Check grid (plank) ─────────────────────────────────────────────── */
+.check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
+.check-item {
+    background: #f5f5f5; border-radius: 10px;
+    padding: 9px 12px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.84rem; color: #555;
+    border: 2px solid transparent; transition: all 0.25s;
+}
+.check-item.pass { background: #e8f5e9; border-color: #43a047; color: #1b5e20; }
+.check-item.fail { background: #ffebee; border-color: #e53935; color: #b71c1c; }
+.check-icon { font-size: 1.1rem; }
+
+/* ─── Leg cards (side leg raise) ──────────────────────────────────────── */
+.leg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+.leg-card { border-radius: 12px; padding: 16px 10px; text-align: center; color: white; }
+.leg-card.left  { background: linear-gradient(135deg, #43a047, #1b5e20); box-shadow: 0 4px 12px rgba(27,94,32,0.3); }
+.leg-card.right { background: linear-gradient(135deg, #1e88e5, #0d47a1); box-shadow: 0 4px 12px rgba(13,71,161,0.3); }
+.leg-card .leg-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.85; margin-bottom: 6px; }
+.leg-card .rep-val   { font-size: 2.4rem; font-weight: 700; line-height: 1; }
+.leg-card .stage-val { font-size: 0.78rem; margin-top: 5px; opacity: 0.9; }
+
+/* Camera rep badges */
+.cam-badge-left  { position: absolute; top: 10px; left: 10px;  background: rgba(67,160,71,0.92); color:#fff; padding:8px 14px; border-radius:8px; font-weight:700; font-size:0.9rem; z-index:10; }
+.cam-badge-right { position: absolute; top: 10px; right: 10px; background: rgba(30,136,229,0.92); color:#fff; padding:8px 14px; border-radius:8px; font-weight:700; font-size:0.9rem; z-index:10; }
+
+/* ─── Mobile responsive ───────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    header h1 { font-size: 1.4rem; }
+    nav ul li a { font-size: 0.8rem; padding: 6px 10px; }
+    .stat-box .stat-value { font-size: 1.8rem; }
+    .timer-display .timer-val { font-size: 3rem; }
+    .page-wrapper { padding: 0 10px 40px; }
+}
